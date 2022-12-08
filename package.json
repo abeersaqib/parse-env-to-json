@@ -2,7 +2,7 @@
   "name": "parse-env-to-json",
   "version": "1.0.4",
   "description": "Parse a .env file to json to be used as an object",
-  "main": "./build/main.js",
+  "main": "./dist/main.js",
   "scripts": {
     "dev": "webpack --watch --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
