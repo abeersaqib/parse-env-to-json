@@ -58,22 +58,22 @@ function extractOnlyValue(allLines: string[], envKey: string): string {
  * @returns {object} environments keys in a object
  */
 const parseEnvFileToJson: paramsRequires = (path, envKeys) => {
-    const env = readFileSync(path, 'utf8');
-    const allLines = extractLines(env);
+  const env = readFileSync(path, 'utf8');
+  const allLines = extractLines(env);
 
-    const environmentsParsed = envKeys.reduce((envJson, envKey) => {
-      const isIncluded = isKeysIncluded(allLines, envKey);
+  const environmentsParsed = envKeys.reduce((envJson, envKey) => {
+    const isIncluded = isKeysIncluded(allLines, envKey);
 
-      if (isIncluded) {
-        const value = extractOnlyValue(allLines, envKey);
+    if (isIncluded) {
+      const value = extractOnlyValue(allLines, envKey);
 
-        return { ...envJson, [camelCase(envKey)]: value };
-      }
+      return { ...envJson, [camelCase(envKey)]: value };
+    }
 
-      return envJson;
-    }, {});
+    return envJson;
+  }, {});
 
-    return environmentsParsed
+  return environmentsParsed;
 };
 
 module.exports = parseEnvFileToJson;
