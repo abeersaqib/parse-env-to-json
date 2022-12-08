@@ -1,4 +1,4 @@
-const { readFile } = require('fs');
+const { readFileSync } = require('fs');
 const { find, camelCase, findIndex } = require('lodash');
 
 const deleteSpacingRegex = /\s/g;
@@ -58,27 +58,22 @@ function extractOnlyValue(allLines: string[], envKey: string): string {
  * @returns {object} environments keys in a object
  */
 const parseEnvFileToJson: paramsRequires = (path, envKeys) => {
-  return new Promise((resolve, reject) => {
-    readFile(path, 'utf8', (err: Error, env: string) => {
-      if (err) reject(err);
+    const env = readFileSync(path, 'utf8');
+    const allLines = extractLines(env);
 
-      const allLines = extractLines(env);
+    const environmentsParsed = envKeys.reduce((envJson, envKey) => {
+      const isIncluded = isKeysIncluded(allLines, envKey);
 
-      const environmentsParsed = envKeys.reduce((envJson, envKey) => {
-        const isIncluded = isKeysIncluded(allLines, envKey);
+      if (isIncluded) {
+        const value = extractOnlyValue(allLines, envKey);
 
-        if (isIncluded) {
-          const value = extractOnlyValue(allLines, envKey);
+        return { ...envJson, [camelCase(envKey)]: value };
+      }
 
-          return { ...envJson, [camelCase(envKey)]: value };
-        }
+      return envJson;
+    }, {});
 
-        return envJson;
-      }, {});
-
-      resolve(environmentsParsed);
-    });
-  });
+    return environmentsParsed
 };
 
 module.exports = parseEnvFileToJson;
